@@ -130,7 +130,7 @@ extern\
     player_Inky:player_struct,\
     player_Clyde:player_struct,\
     player_Cindy:player_struct
-
+    
 
 
 .code

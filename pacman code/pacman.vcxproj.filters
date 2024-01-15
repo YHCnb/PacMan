@@ -27,6 +27,9 @@
     <MASM Include="pacman_music.asm">
       <Filter>源文件</Filter>
     </MASM>
+    <MASM Include="pacman_initcontext.asm">
+      <Filter>源文件</Filter>
+    </MASM>
   </ItemGroup>
   <ItemGroup>
     <None Include="pacman_define.inc">

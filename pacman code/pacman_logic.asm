@@ -691,7 +691,7 @@ get_nxt_dir_by_target proc uses esi ebx,nowDir:dword, nowX:dword, nowY:dword, ta
     mov shortestDistance, eax
     invoke get_reverse_dir, nowDir
     mov reverseDir, eax
-    ; 遍历四个方向
+    ; 遍历四个方向    
     mov esi, Dir_Up
     .while esi <= Dir_Right
         .if esi != reverseDir
