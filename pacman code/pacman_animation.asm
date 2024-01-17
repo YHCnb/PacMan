@@ -130,7 +130,7 @@ extern\
     player_Inky:player_struct,\
     player_Clyde:player_struct,\
     player_Cindy:player_struct
-    
+
 
 
 .code
@@ -166,9 +166,8 @@ draw_PacMan PROC uses esi edi ecx eax ebx edx, player:dword, index_x:dword, inde
         invoke get_nxt_dir, player
         invoke judge_eat, player
         invoke judge_meet, player
-        .if frame_time != buffer_size-1
-            invoke draw_map
-        .endif
+
+        invoke draw_map
         ret
     .endif
 
@@ -208,9 +207,8 @@ draw_PacMan PROC uses esi edi ecx eax ebx edx, player:dword, index_x:dword, inde
             invoke get_nxt_dir, player
             invoke judge_eat, player
             invoke judge_meet, player
-            .if frame_time != buffer_size-1
-                invoke draw_map
-            .endif
+
+            invoke draw_map
         ;隐身效果（闪烁）
         .endif
         shr ebx,1
@@ -220,9 +218,7 @@ draw_PacMan PROC uses esi edi ecx eax ebx edx, player:dword, index_x:dword, inde
     .endif
 
     ;计算插帧偏移量存在ecx中，优化为步数*一步的距离
-    xor edx, edx
-    mov eax, mapGridWidth
-    div @steps ;计算后eax中存放一步的距离
+    mov eax,@Speed;eax中存放一步的距离
     mul @dis ;计算一步的距离*多少步，计算后eax中
     mov ecx, eax ;存在ecx中备用
 
@@ -315,7 +311,7 @@ draw_PacMan PROC uses esi edi ecx eax ebx edx, player:dword, index_x:dword, inde
     sub ecx,8
     mov @double_width, ecx
     
-    ;传入transparentColor参数，用于将白色变为透明
+    ;传入transparentColor参数，用于将黑色变为透明
     mov eax, 000000h
     ;frametime用作buffer的下标
     mov esi, frame_time 
@@ -367,9 +363,9 @@ draw_Ghost PROC uses esi edi ecx eax ebx edx, player:dword, index_x:dword, index
         invoke player_move, player
         invoke get_nxt_dir, player
         invoke judge_meet, player
-        .if frame_time != buffer_size-1
-            invoke draw_map
-        .endif
+
+        invoke draw_map
+
         ret
     .endif
 
@@ -409,16 +405,14 @@ draw_Ghost PROC uses esi edi ecx eax ebx edx, player:dword, index_x:dword, index
             invoke player_move, player
             invoke get_nxt_dir, player
             invoke judge_meet, player
-            .if frame_time != buffer_size-1
-                invoke draw_map
-            .endif
+
+            invoke draw_map
+
         .endif
     .endif
 
     ;计算插帧偏移量存在ecx中，优化为步数*一步的距离
-    xor edx, edx
-    mov eax, mapGridWidth
-    div @steps ;计算后eax中存放一步的距离
+    mov eax,@Speed;eax中存放一步的距离
     mul @dis ;计算一步的距离*多少步，计算后eax中存放偏移量
     mov ecx, eax
 

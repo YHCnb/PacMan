@@ -1,4 +1,6 @@
-PacMan game build by asm
+PacMan game build by asm 
 
-2024.01.15 add pacman_initcontext.asm to split initialize device context function:[initialize_graphics_context]
+2023.12.20 first commit --first edition--
+2024.01.15 add pacman_initcontext.asm to split initialize device context function:[initialize_graphics_context] -- version 1.0 --
+2024.01.16 fix the issue that the game could not run properly after interface scaling -- version 1.1 --
 to be continued...

@@ -206,15 +206,24 @@ init_map PROTO
 initialize_graphics_context proc uses esi edi eax, h_dc:HDC
     local @cnt:dword
     local h_bmp
+    local screen_width:dword, screen_height:dword
 
-    ;创建一个设备环境（Device Context，DC）缓冲区，用于存储预渲染的图像 
+    ; 获取屏幕的宽度和高度
+    invoke GetDC, NULL
+    mov h_bmp, eax
+    invoke GetDeviceCaps, h_bmp, HORZRES
+    mov screen_width, eax
+    invoke GetDeviceCaps, h_bmp, VERTRES
+    mov screen_height, eax
+
+    ; 创建一个设备环境（Device Context，DC）缓冲区，用于存储预渲染的图像 
     mov @cnt, 0
     mov esi, offset h_dc_buffer
     mov edi, offset h_dc_buffer_size
     .while @cnt != buffer_size
         invoke	CreateCompatibleDC, h_dc
         mov	[esi], eax
-        invoke CreateCompatibleBitmap, h_dc, windowWidth, windowHeight
+        invoke CreateCompatibleBitmap, h_dc, screen_width, screen_height
         mov [edi], eax
         invoke	SelectObject,[esi],[edi]
         invoke SetStretchBltMode,[esi],HALFTONE ;HALFTONE 是 Windows GDI（图形设备接口）中的一种位图拉伸模式

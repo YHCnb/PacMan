@@ -6,9 +6,9 @@ pacman_drawmap.asm(1167): warning A6004: procedure argument or local not referen
 pacman_drawmap.asm(1167): warning A6004: procedure argument or local not referenced : @teacherRect
 pacman_drawmap.asm(1167): warning A6004: procedure argument or local not referenced : @authorRect
 pacman_drawmap.asm(1167): warning A6004: procedure argument or local not referenced : @height
-pacman_drawmap.asm(1727): warning A6004: procedure argument or local not referenced : h_dc
-pacman_drawmap.asm(2008): warning A6004: procedure argument or local not referenced : lParam
-pacman_drawmap.asm(2059): warning A6004: procedure argument or local not referenced : hWnd
+pacman_drawmap.asm(1731): warning A6004: procedure argument or local not referenced : h_dc
+pacman_drawmap.asm(2010): warning A6004: procedure argument or local not referenced : lParam
+pacman_drawmap.asm(2061): warning A6004: procedure argument or local not referenced : hWnd
   Assembling pacman_logic.asm...
 pacman_logic.asm(1118): warning A6004: procedure argument or local not referenced : index
 pacman_logic.asm(1118): warning A6004: procedure argument or local not referenced : x

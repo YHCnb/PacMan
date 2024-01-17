@@ -1715,9 +1715,13 @@ draw_window PROC uses eax
 
         dec buffer_cnt
         inc buffer_index
-        .if buffer_index == buffer_size
+        
+        push eax
+        mov eax, mapGridWidth
+        .if buffer_index == eax
             mov buffer_index, 0
         .endif
+        pop eax
 
         mov is_show, 0                          ; is_show为0标示当前缓冲区绘制完毕，为1标示将要或者正在从缓冲区加载一张图像
         jmp main_loop
@@ -1729,8 +1733,6 @@ draw_window ENDP
 create_buffer proc uses ecx esi edi eax
     local @cnt
     local @drawlist_cnt
-
-
 
     main_loop:
         cmp is_buffer, 0
@@ -1746,7 +1748,7 @@ create_buffer proc uses ecx esi edi eax
     .endif
 
         .if game_state == Game_State_Ready || game_state == Game_State_Win || game_state == Game_State_Lose || game_state == Game_State_NxtStage
-            mov ecx, buffer_size
+            mov ecx, mapGridWidth
             mov @cnt, 0
             .while @cnt < ecx
                 push ecx
@@ -1763,7 +1765,7 @@ create_buffer proc uses ecx esi edi eax
             .endw
             jmp main_loop
         .elseif game_state == Game_State_Play || game_state == Game_State_Pause
-            mov ecx, buffer_size
+            mov ecx, mapGridWidth
             mov @cnt, 0
             .while @cnt < ecx
                 push ecx
