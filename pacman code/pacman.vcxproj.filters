@@ -21,13 +21,16 @@
     <MASM Include="pacman_logic.asm">
       <Filter>源文件</Filter>
     </MASM>
-    <MASM Include="pacman_drawmap.asm">
+    <MASM Include="pacman_display.asm">
       <Filter>源文件</Filter>
     </MASM>
     <MASM Include="pacman_music.asm">
       <Filter>源文件</Filter>
     </MASM>
     <MASM Include="pacman_initcontext.asm">
+      <Filter>源文件</Filter>
+    </MASM>
+    <MASM Include="pacman_drawmap.asm">
       <Filter>源文件</Filter>
     </MASM>
   </ItemGroup>

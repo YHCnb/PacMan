@@ -1,14 +1,14 @@
-﻿  Assembling pacman_drawmap.asm...
-pacman_drawmap.asm(1167): warning A6004: procedure argument or local not referenced : @hFont
-pacman_drawmap.asm(1167): warning A6004: procedure argument or local not referenced : @hOldFont
-pacman_drawmap.asm(1167): warning A6004: procedure argument or local not referenced : @gameNameRect
-pacman_drawmap.asm(1167): warning A6004: procedure argument or local not referenced : @startTipRect
-pacman_drawmap.asm(1167): warning A6004: procedure argument or local not referenced : @teacherRect
-pacman_drawmap.asm(1167): warning A6004: procedure argument or local not referenced : @authorRect
-pacman_drawmap.asm(1167): warning A6004: procedure argument or local not referenced : @height
-pacman_drawmap.asm(1731): warning A6004: procedure argument or local not referenced : h_dc
-pacman_drawmap.asm(2010): warning A6004: procedure argument or local not referenced : lParam
-pacman_drawmap.asm(2061): warning A6004: procedure argument or local not referenced : hWnd
+﻿  Assembling pacman_display.asm...
+pacman_display.asm(662): warning A6004: procedure argument or local not referenced : @hFont
+pacman_display.asm(662): warning A6004: procedure argument or local not referenced : @hOldFont
+pacman_display.asm(662): warning A6004: procedure argument or local not referenced : @gameNameRect
+pacman_display.asm(662): warning A6004: procedure argument or local not referenced : @startTipRect
+pacman_display.asm(662): warning A6004: procedure argument or local not referenced : @teacherRect
+pacman_display.asm(662): warning A6004: procedure argument or local not referenced : @authorRect
+pacman_display.asm(662): warning A6004: procedure argument or local not referenced : @height
+pacman_display.asm(1226): warning A6004: procedure argument or local not referenced : h_dc
+pacman_display.asm(1505): warning A6004: procedure argument or local not referenced : lParam
+pacman_display.asm(1556): warning A6004: procedure argument or local not referenced : hWnd
   Assembling pacman_logic.asm...
 pacman_logic.asm(1118): warning A6004: procedure argument or local not referenced : index
 pacman_logic.asm(1118): warning A6004: procedure argument or local not referenced : x
@@ -19,4 +19,5 @@ pacman_logic.asm(1255): warning A6004: procedure argument or local not reference
   Assembling pacman_animation.asm...
   Assembling pacman_music.asm...
   Assembling pacman_initcontext.asm...
+  Assembling pacman_drawmap.asm...
   pacman.vcxproj -> E:\CODE\git_repositories\PacMan\pacman code\Debug\pacman.exe
