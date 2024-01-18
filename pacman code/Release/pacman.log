@@ -1,0 +1,3 @@
+﻿  Assembling pacman_drawmap.asm...
+pacman_drawmap.asm(15): fatal error A1000: cannot open file : user32.inc
+E:\VS\MSBuild\Microsoft\VC\v150\BuildCustomizations\masm.targets(69,5): error MSB3721: 命令“ml.exe /c /nologo /Zi /Fo"Release\pacman_drawmap.obj" /I "C:\masm32\include" /W3 /errorReport:prompt  /Tapacman_drawmap.asm”已退出，返回代码为 1。
