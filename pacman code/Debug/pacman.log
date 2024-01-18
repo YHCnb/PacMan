@@ -8,7 +8,7 @@ pacman_display.asm(635): warning A6004: procedure argument or local not referenc
 pacman_display.asm(635): warning A6004: procedure argument or local not referenced : @height
 pacman_display.asm(1182): warning A6004: procedure argument or local not referenced : h_dc
 pacman_display.asm(1464): warning A6004: procedure argument or local not referenced : lParam
-pacman_display.asm(1515): warning A6004: procedure argument or local not referenced : hWnd
+pacman_display.asm(1517): warning A6004: procedure argument or local not referenced : hWnd
   Assembling pacman_logic.asm...
 pacman_logic.asm(1118): warning A6004: procedure argument or local not referenced : index
 pacman_logic.asm(1118): warning A6004: procedure argument or local not referenced : x

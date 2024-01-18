@@ -1494,17 +1494,19 @@ init_window proc, _hDc:HDC, hWnd: HWND
     ; 创建画面创建及显示线程
     invoke CreateThread, NULL, 0, draw_window, NULL, 0, NULL
     invoke CreateThread, NULL, 0, create_buffer, NULL, 0, NULL
-    invoke CreateThread, NULL, 0, control_frame_rate, NULL, 0, NULL
     ;创建定时器
+        ; 帧数控制定时器，用于控制显示帧数
+    invoke CreateThread, NULL, 0, control_frame_rate, NULL, 0, NULL
+        ; 界面显示定时器
     invoke CreateThread, NULL, 0, timer_NextStage, NULL, 0, NULL
-
+        ; 道具时间定时器
     invoke CreateThread, NULL, 0, timer_issuper, NULL, 0, NULL
     invoke CreateThread, NULL, 0, timer_isfast, NULL, 0, NULL
     invoke CreateThread, NULL, 0, timer_isinvisible, NULL, 0, NULL
-
+        ; 幽灵追逐模式和追逐目标定时器
     invoke CreateThread, NULL, 0, timer_isSwitching, NULL, 0, NULL
     invoke CreateThread, NULL, 0, timer_ischasing, NULL, 0, NULL
-
+        ; 间隔释放幽灵定时器
     invoke CreateThread, NULL, 0, timer_Release , NULL, 0, NULL
 
     ;创建播放音乐线程
