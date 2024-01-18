@@ -43,12 +43,12 @@ extern h_dc_buffer:dword
 extern h_dc_buffer_size:dword
 
 extern h_dc_pacman1_left:dword
-extern h_dc_pacman2_left:dword
 extern h_dc_pacman1_down:dword
-extern h_dc_pacman2_down:dword
 extern h_dc_pacman1_right:dword
-extern h_dc_pacman2_right:dword
 extern h_dc_pacman1_up:dword
+extern h_dc_pacman2_left:dword
+extern h_dc_pacman2_down:dword
+extern h_dc_pacman2_right:dword
 extern h_dc_pacman2_up:dword
 extern h_dc_blinky_left:dword
 extern h_dc_blinky_down:dword
@@ -226,19 +226,22 @@ initialize_graphics_context proc uses esi edi eax, h_dc:HDC
         invoke CreateCompatibleBitmap, h_dc, screen_width, screen_height
         mov [edi], eax
         invoke	SelectObject,[esi],[edi]
-        invoke SetStretchBltMode,[esi],HALFTONE ;HALFTONE 是 Windows GDI（图形设备接口）中的一种位图拉伸模式
+        invoke SetStretchBltMode,[esi],HALFTONE ; 定义位图拉伸模式为HALFTONE
         add esi, 4
         add edi, 4
         inc @cnt
     .endw
 
-    invoke	CreateCompatibleDC, h_dc    ;创建与h_dc兼容的内存设备上下文,返回内存设备上下文的句柄
+    ; 创建与h_dc兼容的内存设备上下文,返回内存设备上下文的句柄
+    ; 创建背景设备上下文
+    invoke	CreateCompatibleDC, h_dc    
 	mov	h_dc_background, eax
     invoke LoadImage, NULL, addr background, IMAGE_BITMAP, 0, 0, LR_LOADFROMFILE or LR_SHARED
     mov h_bmp, eax
     invoke SelectObject, h_dc_background, h_bmp
     invoke DeleteObject, h_bmp
-
+    
+    ; 创建开始界面设备上下文
     invoke	CreateCompatibleDC, h_dc
     mov h_dc_start_up, eax
     invoke CreateCompatibleBitmap, h_dc, windowWidth, windowHeight
@@ -246,6 +249,7 @@ initialize_graphics_context proc uses esi edi eax, h_dc:HDC
     invoke SelectObject, h_dc_start_up, h_bmp
     invoke DeleteObject, h_bmp
 
+    ; 创建游戏结束界面设备上下文
     invoke	CreateCompatibleDC, h_dc
     mov h_dc_game_over, eax
     invoke CreateCompatibleBitmap, h_dc, windowWidth, windowHeight
@@ -253,6 +257,7 @@ initialize_graphics_context proc uses esi edi eax, h_dc:HDC
     invoke SelectObject, h_dc_game_over, h_bmp
     invoke DeleteObject, h_bmp
 
+    ; 创建地图和豆子的设备上下文
     invoke	CreateCompatibleDC, h_dc
     mov h_dc_map_and_bean, eax
     invoke CreateCompatibleBitmap, h_dc, windowWidth, windowHeight
@@ -260,6 +265,7 @@ initialize_graphics_context proc uses esi edi eax, h_dc:HDC
     invoke SelectObject, h_dc_map_and_bean, h_bmp
     invoke DeleteObject, h_bmp
 
+    ; 创建分数和关卡面板设备上下文
     invoke	CreateCompatibleDC, h_dc
     mov h_dc_panel, eax
     invoke CreateCompatibleBitmap, h_dc, windowWidth, windowHeight
@@ -274,8 +280,6 @@ initialize_graphics_context proc uses esi edi eax, h_dc:HDC
     mov h_dc_bmp_size, eax
     invoke  SelectObject, h_dc_bmp, h_dc_bmp_size
     invoke  SetStretchBltMode, h_dc_bmp, COLORONCOLOR
-    ;拉伸位图时，将删除被拉伸的位图的颜色，并使用目标设备环境中最接近的颜色来替换。
-    ;这种模式适用于减少拉伸位图时的颜色失真。
 
     ;加载吃豆人和怪物的位图资源，并加载到指定进程上下文中
     invoke	CreateCompatibleDC, h_dc      

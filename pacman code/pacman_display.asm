@@ -28,32 +28,23 @@ includelib  winmm.lib
 
 .data
 ; 外部变量声明
-extern draw_list:draw_struct, draw_list_size:dword
-extern game_state:dword
+extern draw_list:draw_struct
+extern draw_list_size:dword
+extern game_state:dword                 ; 游戏状态
 extern need_redraw:dword
 extern player_PacMan:player_struct
 extern player_RedMan:player_struct
-extern player_Cindy:player_struct
-extern item_map:dword 
-extern score:dword
-extern game_mode:dword
-extern chase_target:dword
-extern map_cols:dword                          ; 地图的宽度
+extern player_Cindy:player_struct                   
+extern score:dword                       ; 游戏得分
+extern game_mode:dword                   ; 设定游戏模式
+extern chase_target:dword                ; 多人模式中设置幽灵追逐目标
+extern map_cols:dword                    ; 地图的宽度
 extern map_rows:dword                    ; 地图的高度
 extern mapX:dword                        ; 地图的左上角X坐标
 extern mapY:dword                        ; 地图的左上角Y坐标
 
 .data
-;窗口类名
-str_class_name byte 'main_window', 0
-
-pause_msg_title byte 'Pause', 0
-gameover_msg_title byte 'Game Over', 0
-
-win_msg byte 'Congratulations! Pac-Man has eaten all the dots.', 0
-lose_msg byte 'Oh no! Better luck next time.', 0
-pause_msg byte 'Game pause! Press -Enter- to continue', 0
-
+; 定义窗口标题（运行时随机选择显示）
 str_main_caption   byte 200 dup(0)
 str_main_caption_1 byte 'Pac-Man is currently searching for dots... Have fun!', 0
 str_main_caption_2 byte 'Monsters are approaching you, stay vigilant!', 0
@@ -77,31 +68,30 @@ music_wake sbyte '.\music\wake.mp3', 0
 
 .data
 ;in control_frame_rate draw_window
-is_show dword 0         
-is_buffer dword 1
-fps dword 20000         ;!!!这里的fps并不代表帧率!!!
-dw1m dword 1000000      ;fps/dwlm=每n秒刷新一次,设置为每0.02秒刷新一次(帧率=50帧/s)
-;in draw_window
+is_show dword 0         ; is_show控制是否在窗口绘制帧
+is_buffer dword 1       ; is_buffer是否继续向缓冲区填充帧
+frame_time dword 20000  ; frame_time用于控制显示帧的时间间隔
+dw1m dword 1000000      ; frame_time/dwlm=每n秒刷新一次,设置为每0.02秒刷新一次(帧率=50帧/s)
+;in draw_window and create_buffer
 buffer_index dword 0
-buffer_cnt dword 0
-;check_operation
-pacman_dir dword 2
-pacman_now_dir dword 2
+buffer_cnt dword 0      ; 定义缓冲区计数器
 
-; 附加道具及状态定义
-is_super_pacman dword 0
-superbean_time dword 10000000                ; time/dwlm=n(秒)时间间隔
+; 附加道具及状态定义，time/dwlm=n(秒)时间间隔
+is_super_pacman dword 0                     
+superbean_time dword 10000000                ; 超级豆时间：10秒
 is_fast_pacman dword 0
-fastbean_time dword 10000000
+fastbean_time dword 10000000                 ; 快速豆时间：10秒
 is_invisible_pacman dword 0
-invisiblebean_time dword 10000000
+invisiblebean_time dword 10000000            ; 隐身豆时间：10秒
 
-switching_time dword 15000000
+switching_time dword 15000000                ; 在双人模式中，每15秒切换一次幽灵追逐目标
 is_chasing_pacman dword 0
-chasing_time dword 20000000
-scatter_time dword 8000000
 
-; 播放音乐定义
+; 潮汐式追逐吃豆人，幽灵在追逐和散开状态之间反复切换
+chasing_time dword 20000000                  ; 单次连续追逐吃豆人时间：20秒
+scatter_time dword 8000000                   ; 单次连续分散时间：8秒
+
+; 播放音乐开关定义
 play_die_music dword 0
 play_eatghost_music dword 0
 play_power_pill_music dword 0
@@ -110,18 +100,12 @@ play_wake_music dword 0
 
 ; 下一关卡显示界面自动关闭时间
 is_gamenextstage dword 0
-gamenextstage_time dword 5000000            ; 5秒
+gamenextstage_time dword 5000000            ; 下一关卡显示界面自动关闭时间：5秒
 
-; 释放下一个ghost
+; 间隔从笼中释放幽灵
 release_nxt_ghost dword 0
-firstghost_time dword 1000000
-nextghost_time dword 3000000
-
-.data
-message sbyte 100 dup(0)
-stdOutputHandle dword 0
-format sbyte 'address %d', 0
-
+firstghost_time dword 1000000               ; 关卡开始1秒后释放第一个幽灵                   
+nextghost_time dword 3000000                ; 每隔3秒释放一个幽灵
 
 .data
 ; 窗口及参数定义
@@ -131,9 +115,6 @@ windowX dword 200						; 窗口X位置
 windowY dword 100						; 窗口Y位置
 windowWidth dword 900					; 窗口宽度
 windowHeight dword 700					; 窗口高度
-
-playerX dword 100
-playerY dword 100
 
 mapGridWidth dword 20                   ; 地图一格的宽度
 
@@ -283,11 +264,6 @@ finalScore sbyte 20 dup(0)
 finalScoreFontName sbyte 'Courier', 0
 finalScoreRectHeight dword 40
 finalScoreColor dword 00FFFFFFh
-; mov [ebx], WndProc
-; mov word ptr [ebx+2], cs
-;invoke crt_sprintf, addr message, addr format, 10
-;invoke crt_wcslen, addr message
-;invoke WriteConsole, stdOutputHandle, addr message, eax, NULL, NULL
 
 .data?
 ; 未初始化变量声明
@@ -388,7 +364,6 @@ hMemoryBitmap HBITMAP ?
 
 .code
 ; 公共变量定义
-public fps
 public is_super_pacman, is_fast_pacman, is_invisible_pacman
 public is_chasing_pacman
 public windowX 
@@ -656,8 +631,6 @@ paintReadyScreen proc uses eax ebx edx, _hDc: HDC
         addr authorFontName, authorColor, DT_CENTER, 1
     add eax, authorRectHeight
 
-    ; TODO：显示学校？？？
-
     ret
 paintReadyScreen endp
 
@@ -705,23 +678,6 @@ paintRightPanel proc, _hDc: HDC, _isPause
             addr pauseStrFontName, pauseStrColor, DT_LEFT, textIsShow
     .endif
     add eax, pauseStrRectHeight
-
-
-    ; 显示**LIFE**
-    ;add eax, gapBetweenPauseStrAndLifeStr
-    ;invoke paintText, _hDc, addr lifeStr, panelX, eax, panelWidth, lifeStrRectHeight, FW_HEAVY, ANSI_CHARSET, \
-        ;addr lifeStrFontName, lifeStrColor, DT_LEFT, 1
-    ;add eax, lifeStrRectHeight
-
-
-    ; 显示生命
-    ;add eax, gapBetweenLifeStrAndLifeNum
-    ;push eax
-    ;invoke crt_sprintf, addr lifeNum, addr lifeNumFormat, life
-    ;pop eax
-    ;invoke paintText, _hDc, addr lifeNum, panelX, eax, panelWidth, lifeNumRectHeight, FW_HEAVY, ANSI_CHARSET, \
-    ;   addr lifeNumFontName, lifeNumColor, DT_LEFT, 1
-
 
     popad
     ret 
@@ -804,9 +760,8 @@ paintNxtStageScreen proc, _hDc: HDC
     ret
 paintNxtStageScreen endp
 
-
+; 绘制地图，豆子，面板，win/lose/nextstage界面
 paintInMemoryDc proc
-
     .if game_state == Game_State_Play
         invoke paintMap, hMemoryDc
         invoke paintBean, hMemoryDc
@@ -824,12 +779,10 @@ paintInMemoryDc proc
     .elseif game_state == Game_State_NxtStage
         invoke paintNxtStageScreen, hMemoryDc
     .endif
-    
-    ;popad
     ret
 paintInMemoryDc endp
 
-;下一关卡界面定时器，间隔5秒
+;下一关卡界面定时器
 timer_NextStage proc uses eax edx                     
     local time1:qword,time2:qword,freq:qword                                                   
     invoke QueryPerformanceFrequency, addr freq         ;获取高精度计时器的频率
@@ -862,15 +815,14 @@ timer_NextStage proc uses eax edx
                                                 ;该时间差即为帧与帧之间的绘制间隔（帧率计算）
     .endw
 
+    mov score, 0
     mov is_gamenextstage, 0
 
     call init_map
 
     inc level
-    ;mov score, 0
 
     mov game_state, Game_State_Play
-    ; 其他代码...
 
     jmp loop_nxt_stage
 
@@ -878,6 +830,7 @@ timer_NextStage proc uses eax edx
     ret
 timer_NextStage endp
 
+; 超级豆定时器
 timer_issuper proc uses eax edx                     
     local time1:qword,time2:qword,freq:qword                                                   
     invoke QueryPerformanceFrequency, addr freq         ;获取高精度计时器的频率
@@ -918,6 +871,7 @@ timer_issuper proc uses eax edx
     ret
 timer_issuper endp
 
+; 快速豆定时器
 timer_isfast proc uses eax edx                     
     local time1:qword,time2:qword,freq:qword                                                   
     invoke QueryPerformanceFrequency, addr freq         ;获取高精度计时器的频率
@@ -958,6 +912,7 @@ timer_isfast proc uses eax edx
     ret
 timer_isfast endp
 
+; 隐身豆定时器
 timer_isinvisible proc uses eax edx                     
     local time1:qword,time2:qword,freq:qword                                                   
     invoke QueryPerformanceFrequency, addr freq         ;获取高精度计时器的频率
@@ -997,7 +952,7 @@ timer_isinvisible proc uses eax edx
     ret
 timer_isinvisible endp
 
-;is_dying定时器，4秒
+; 双人模式中切换幽灵追逐目标定时器
 timer_isSwitching proc uses eax edx                     
     local time1:qword,time2:qword,freq:qword                                                   
     invoke QueryPerformanceFrequency, addr freq         ;获取高精度计时器的频率
@@ -1098,6 +1053,7 @@ timer_ischasing proc uses eax edx
     ret
 timer_ischasing endp
 
+; 从笼中间隔释放幽灵定时器
 timer_Release proc uses eax edx                     
     local time1:qword,time2:qword,freq:qword, @cnt:dword                                              
     invoke QueryPerformanceFrequency, addr freq         ;获取高精度计时器的频率
@@ -1163,7 +1119,7 @@ timer_Release proc uses eax edx
     ret
 timer_Release endp
 
-;定时器，固定间隔将is_show设置为1
+;帧数定时器，固定间隔将is_show设置为1以控制显示帧率
 control_frame_rate proc uses eax edx                             ;通过控制 is_show 变量的值来控制渲染帧的输出
     local time1:qword,time2:qword,freq:qword             
     mov is_show, 1                                         
@@ -1173,7 +1129,7 @@ control_frame_rate proc uses eax edx                             ;通过控制 is_sh
         invoke QueryPerformanceCounter,addr time1       ;获取当前性能计数器的计数值（高精度的时间戳）
         mov is_show, 1  
         xor eax, eax
-        .while eax < fps
+        .while eax < frame_time
             invoke QueryPerformanceCounter,addr time2
             mov eax,dword ptr time1             
             mov edx,dword ptr time1+4
@@ -1225,6 +1181,7 @@ draw_window PROC uses eax
         ret
 draw_window ENDP
 
+; 向缓冲区中填充图像
 create_buffer proc uses ecx esi edi eax
     local @cnt
     local @drawlist_cnt
@@ -1291,6 +1248,7 @@ create_buffer proc uses ecx esi edi eax
         ret
 create_buffer endp
 
+; 关闭窗口，释放资源
 close_window PROC uses esi edi
     local @cnt
     mov @cnt, 0
@@ -1394,6 +1352,7 @@ close_window PROC uses esi edi
     ret
 close_window ENDP
 
+; (死亡)音乐播放线程
 play_music proc
 local @die_cnt:dword
 mov @die_cnt, 0
@@ -1485,7 +1444,7 @@ processKeyInput proc, _hWnd: HWND, wParam: WPARAM, lParam: LPARAM
             .endif
         .endif
     .endif
-    ;测试Lose，Win，NextStage窗口
+    ;debug模式下，测试Lose，Win，NextStage窗口
     .if wParam == VK_L
         .if game_state == Game_State_Play
             mov game_state, Game_State_Lose
@@ -1504,7 +1463,7 @@ processKeyInput proc, _hWnd: HWND, wParam: WPARAM, lParam: LPARAM
     ret
 processKeyInput endp
 
-
+; 处理窗口缩放函数
 processSizeChange proc uses ebx ecx eax, _lParam: LPARAM
     mov ebx, _lParam
     mov ecx, ebx
@@ -1528,7 +1487,7 @@ processSizeChange proc uses ebx ecx eax, _lParam: LPARAM
     ret
 processSizeChange endp
 
-.code
+; 初始化窗口，创建线程
 init_window proc, _hDc:HDC, hWnd: HWND
     invoke initialize_graphics_context, _hDc                                       ;创建所有h_dc，使用黑色空区域图片填满buffer，此时buffer为满，初始化gamestate为ready
     invoke playMusic, addr music_theme, 0
@@ -1555,8 +1514,8 @@ init_window proc, _hDc:HDC, hWnd: HWND
     ret
 init_window endp
 
+; 处理窗口消息函数
 WndProc proc, hWnd: HWND, msgID: UINT, wParam: WPARAM, lParam: LPARAM
-; 窗口处理函数
     .if msgID == WM_TIMER
         .if wParam == 2
             .if stateSwitch == 0
@@ -1603,15 +1562,13 @@ WndProc proc, hWnd: HWND, msgID: UINT, wParam: WPARAM, lParam: LPARAM
         invoke SetTimer, hWnd, 1, 10, NULL
         invoke SetTimer, hWnd, 2, 150, NULL
         invoke SetTimer, hWnd, 3, 800, NULL
-    ;//获取窗口的宽和高
-			;RECT rect;
-			;GetClientRect(hWnd,&rect);
 	.endif
 
 	invoke DefWindowProc, hWnd, msgID, wParam, lParam
 	ret
 WndProc endp
 
+; 随机选择主窗口标题函数
 random_str_main_caption proc uses esi edi eax edx ecx
     ; 设置随机数种子
     invoke GetTickCount
@@ -1703,11 +1660,8 @@ copy_str:                        ;执行字符串复制
 random_str_main_caption endp
 
 WinMain proc
-; 主函数
+    ; 窗口主函数
 	local @wc: WNDCLASS, @hIns: HINSTANCE, @hWnd: HWND, @nMsg: MSG
-	 ;invoke AllocConsole		; 引入Dos窗口，方便调试
-	 ;invoke GetStdHandle, STD_OUTPUT_HANDLE
-	 ;mov stdOutputHandle, eax
 
 	invoke GetModuleHandle, NULL
 	mov	@hIns,eax			                ; 得到应用程序的句柄
@@ -1728,7 +1682,7 @@ WinMain proc
 	; 注册窗口类
 	invoke RegisterClass, addr @wc
 
-    ;随机选择str_main_caption
+    ;随机选择主窗口标题
     invoke random_str_main_caption
 
 	; 在内存中创建窗口
@@ -1740,9 +1694,7 @@ WinMain proc
 	invoke ShowWindow, @hWnd, SW_SHOW
 	invoke UpdateWindow, @hWnd
 
-    ; invoke ShowCursor, FALSE                  ; 不显示鼠标
-
-	; 消息循环
+	; 消息循环，处理窗口消息
     invoke GetMessage, addr @nMsg, NULL, 0, 0
 	.while eax
         invoke TranslateMessage, addr @nMsg
